@@ -1,89 +1,57 @@
-<?php
-    // Incluir neste ponto o arquivo conecta.php 
-    require_once "conecta.php";
-    
-    // Programar a função lerFabricantes neste ponto
-    
-    function lerFabricantes(PDO $conexao):array {
-        //String com o comando SQL
-        $sql = "SELECT id,nome FROM fabricantes";
-        try {
-            //preparação do comando
-            $consulta = $conexao->prepare($sql);
+<?php 
+    require_once "../src/funcoes-produtos.php";
+    $listaDeProdutos = lerProdutos($conexao);
 
-            //Execução do comando
-            $consulta->execute();
+?>
 
-            //capturar os resultados
-            $resultado = $consulta->fetchA11(PDO::FETCH_ASSOC);
-        } catch (Exception $erro) {
-            die ("Erro .$erro->getMessage()");
-        }
-        return $resultado;
-        }
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Produtos | SELECT <a href=".../index.php"></a></h1>
+        <hr>
+        <h2>Lendo e carregando todos os produtos</h2>
 
-    // Inserir um fabricante (PDO - PHP Database Object)
-    // Obs void indica que a função não tem retorno "return"
+        <p><a href="inserir.php" style="color:blue;">Inserir a um novo produto</a></p>
+        <hr>
+        <div class="produtos">
+            <?php foreach($listaDeProdutos as $produto) { ?> 
+            
+                <article>
+                    <!-- <h3><?=$produto['nome']?></h3> -->
 
-    // Programar a função inserirFabricante neste ponto
-    function inserirFabricante(PDO $conexao, string $nome):void {
-        //Insere no banco de dados o valor digitado pelo usuário no formulário armazenado na variável $nome
-        //Obs : Não é necessário criar para o ID que é automático
+                    <h3><?=$produto['produto'] ?></h3>
+                    
+                    <!-- <p><b>Preço:</b>  R$ <?=number_format($produto['preco'], 2, ',', '.')?></p> -->
 
-        //:qualquer_cois ->isso é um named parameter
-        $sql ="INSERT INTO fabricantes(nome) VALUES(:nome)";
-        try {
-            $consulta = $conexao->prepare($sql);
+                    <p><b>Preço:</b>  <?=formataMoeda($produto['preco'])?></p>
 
-            //bindParam ('nome do parametro', $variavel_com_valor, constante de verificação)
-            $consulta->bindParam(':nome', $nome, PDO::PARAM_STR);
-            $consulta-> execute();
-        } catch (Exception $erro){
-            die("Erro: ".$erro->getMessage());
-        }
-    }
-    
-    // Programar a função lerUmFabricante neste ponto
-    function lerUmFabricante(PDO $conexao, int $id):array {
-        $sql = "SELECT id, nome FROM fabricantes WHERE id = :id";
-        try {
-            $consulta = $conexao->prepare($sql);
-            $consulta->bindParam(':id, $id, PDO::PARAM_INT');
-            //Aqui usanso fetch porque é apenas 1 fabricante
-        } catch (Exeption $erro){
-            die("Erro: ".$erro->getMessage());
-        }
-        return $resultado;
+                    <p><b>Quantidade:</b>  <?=$produto['quantidade']?></p>
+                    <p><b>Descrição:</b>  <?=$produto['descricao']?></p>
+                    <!-- <p><b>Fabricantes:</b> <?=$produto['fabricante_id'] ?></p> -->
 
-    }
-    
-    // Programar a função atualizarFabricante neste ponto
-    function atualizarFabricante (PDO $conexao, int $id, string $nome):void {
-        $sql = "UPDATE fabricantes SET nome = nome WHERE id = id ";
-        try {
-            $consulta = $conexao->prepare($sql);
-            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-            $consulta->bindParam(':nome', $nome, PDO::PARAM_STR);
-            $consulta->execute();
+                    <p><b>Fabricantes:</b> <?=$produto['fabricantes']?></p>
 
-        } catch (Exception $erro){
-            die("Erro: ".$erro->getMessage());
-        }
-    }
-    
-    // Programar a função excluirFabricante neste ponto
-    function excluirFabricante(PDO $conexao, int $id):void {
-        $sql = "DELETE FROM fabricantes WHERE id = :id ";
-        try {
-            $consulta = $conexao->prepare($sql);
-            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-            $consulta->execut();
-        } catch (Exception $erro){
-            die("Erro: ".$erro->getMessage());
-        }
-    }
+                    <p>
+                        <a href="atualizar.php?id=<?=$produto['id']?>" style ="color: blue;">Atualizar</a>
+                        <a class="excluir" href="excluir.php?id=<?=$produto['id']?>" style ="color:red;">Excluir</a>
+                    </p>
 
-    // _______________________________
+                    <hr>
+                </article>
+                <?php } ?>
+        </div>
 
-    
-    
+    </div>
+
+    <script src="../js/confirm.js"></script>
+    <!-- <p><a href="../index.html">Home</a></p> -->
+
+</body>
+</html>
