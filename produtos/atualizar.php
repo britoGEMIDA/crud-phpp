@@ -15,14 +15,14 @@
         
         // versão com filtro de sanitização (Melhor)
         // Capturando e limpando o que foi digitado no campo nome (Formulário)
-        $nome = filter_input(INPUT_POST. 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-        $preco = filter_input(INPUT_POST. '', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $qualidade = filter_input(INPUT_POST. 'qualidade', FILTER_SANITIZE_NUMBER_INT);
-        $descricao = filter_input(INPUT_POST. 'descricao', FILTER_SANITIZE_SPECIAL_CHARS);
-        $fabricanteID = filter_input(INPUT_POST. 'fabricante', FILTER_SANITIZE_NUMBER_INT);
+        $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
+        $preco = filter_input(INPUT_POST, 'preco', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_SANITIZE_NUMBER_INT);
+        $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_SPECIAL_CHARS);
+        $fabricanteId = filter_input(INPUT_POST, 'fabricante', FILTER_SANITIZE_NUMBER_INT);
 
         // Chamando a função e passando os dados de conexão e o nome digitado
-        atualizarProdutos($conexao, $id, $nome, $preco, $quantidade, $descricao, $fabrincantesId);
+        atualizarProduto($conexao, $id, $nome, $preco, $quantidade, $descricao, $fabricanteId);
 
         // Redirecionamento (Nada a ver com a Tag do HTML)
         header("location:listar.php");
@@ -88,7 +88,6 @@
         </div>
 
         <p><a href="listar.php">Voltar para a Lista de Produtos</a></p>
-
         <p><a href="../index.html">Home</a></p>
 
     </body>
